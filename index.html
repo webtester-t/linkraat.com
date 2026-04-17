@@ -1,186 +1,969 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LinkRaat</title>
-  <!-- Inter font — clean, geometric, brandless -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap" rel="stylesheet">
-  <style>
-    /* reset – everything subtle, no distractions */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>LinkRaat · Real friends & mental health space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #0c0f15;  /* deep silent backdrop */
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;              /* no scroll, pure focus */
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #eceef2;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            transition: background 0.3s ease, color 0.2s ease;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
 
-    /* ---------- soft living blobs (open-source spirit, pure css) ---------- */
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);           /* dreamy, distant light */
-      opacity: 0.3;                  /* whisper, not shout */
-      will-change: transform;
-      pointer-events: none;           /* never block text */
-      z-index: 0;
-    }
+        body.light-mode {
+            background: #eef2ff;
+        }
 
-    .blob-1 {
-      width: 70vmax;
-      height: 70vmax;
-      background: #5f6caf;            /* muted lavender-blue */
-      top: -20vh;
-      left: -10vw;
-      animation: drift1 28s infinite alternate ease-in-out;
-    }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-    .blob-2 {
-      width: 60vmin;
-      height: 60vmin;
-      background: #cf6f8b;            /* dusty rose */
-      bottom: -5vh;
-      right: -5vw;
-      animation: drift2 22s infinite alternate ease-in-out;
-    }
+        .linkcard {
+            border-radius: 2rem;
+            background: #1e293b;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: background 0.3s ease, box-shadow 0.2s;
+            border: 1px solid #334155;
+        }
 
-    .blob-3 {
-      width: 80vmin;
-      height: 80vmin;
-      background: #b7a46c;            /* warm ochre */
-      top: 30vh;
-      right: 20vw;
-      opacity: 0.25;
-      animation: drift3 32s infinite alternate ease-in-out;
-    }
+        body.light-mode .linkcard {
+            background: #ffffff;
+            border: 1px solid #e2edf2;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08);
+        }
 
-    /* slow, wandering movements — like clouds forming */
-    @keyframes drift1 {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(12%, 8%) scale(1.2); }
-    }
-    @keyframes drift2 {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-15%, -12%) scale(1.3); }
-    }
-    @keyframes drift3 {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(8%, -18%) scale(1.15); }
-    }
+        .brand-area {
+            padding: 1.2rem 1.5rem 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+        body.light-mode .brand-area {
+            border-bottom-color: #e9edf2;
+        }
+        .brand-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #A5F3FC, #38BDF8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        body.light-mode .brand-title {
+            background: linear-gradient(135deg, #0F3B5E, #1E6F9F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .tagline-sm {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+        body.light-mode .tagline-sm {
+            color: #475569;
+        }
 
-    /* ---------- main content — only words, no logo, no input ---------- */
-    .message {
-      position: relative;
-      z-index: 10;
-      max-width: 900px;
-      padding: 2rem;
-      text-align: center;
-      animation: appear 1.8s ease-out;   /* gentle fade on load */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-    }
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 26px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #facc15;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3b82f6;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            background-color: #ffffff;
+        }
+        .theme-icon {
+            font-size: 0.9rem;
+            color: #cbd5e6;
+        }
+        body.light-mode .theme-icon {
+            color: #3b3f5c;
+        }
 
-    h1 {
-      font-weight: 600;
-      font-size: clamp(2.5rem, 12vw, 5.2rem);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff 0%, #dedede 90%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;                /* subtle gradient in text */
-      text-shadow: 0 0 30px rgba(190, 190, 255, 0.15);
-      margin-bottom: 0.2rem;
-    }
+        .landing-block {
+            padding: 2rem 1.5rem 1.8rem 1.5rem;
+        }
+        .hero-badge {
+            background: #2d3a5e;
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #b9e0ff;
+            margin-bottom: 1rem;
+        }
+        body.light-mode .hero-badge {
+            background: #e2edf7;
+            color: #1e4a76;
+        }
+        .landing-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 0.75rem;
+        }
+        body.light-mode .landing-title {
+            color: #0f2b3d;
+        }
+        .landing-desc {
+            color: #cbd5e6;
+            line-height: 1.5;
+            margin-bottom: 1.8rem;
+        }
+        body.light-mode .landing-desc {
+            color: #334155;
+        }
+        .btn-start-survey {
+            background: #3b82f6;
+            border: none;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-start-survey:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.8rem;
+            flex-wrap: wrap;
+        }
+        .social-icons a {
+            color: #94a3b8;
+            font-size: 1.5rem;
+            transition: 0.2s;
+        }
+        body.light-mode .social-icons a {
+            color: #4b5563;
+        }
+        .social-icons a:hover {
+            color: #38bdf8;
+            transform: translateY(-3px);
+        }
 
-    .sub {
-      font-weight: 300;
-      font-size: clamp(1.2rem, 5vw, 2.2rem);
-      letter-spacing: 0.2rem;
-      text-transform: uppercase;
-      color: #b2b9cc;
-      background: linear-gradient(135deg, #d0d6e6, #a3aec9);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      opacity: 0.9;
-      margin-top: 0.2rem;
-      border-bottom: 1px solid rgba(160, 180, 220, 0.2);
-      padding-bottom: 0.75rem;
-    }
+        .survey-container {
+            padding: 1.5rem 1.5rem 2rem 1.5rem;
+        }
+        .progress-area {
+            margin-bottom: 1.5rem;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #94a3b8;
+        }
+        body.light-mode .progress-text {
+            color: #475569;
+        }
+        .progress-bar-bg {
+            background: #2d3748;
+            border-radius: 40px;
+            height: 6px;
+            overflow: hidden;
+        }
+        body.light-mode .progress-bar-bg {
+            background: #e2e8f0;
+        }
+        .progress-fill {
+            background: #38bdf8;
+            width: 0%;
+            height: 100%;
+            border-radius: 40px;
+            transition: width 0.25s;
+        }
+        .question-card {
+            margin-bottom: 1.8rem;
+        }
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+        body.light-mode .question-text {
+            color: #0f2b3d;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .opt-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1.2rem;
+            padding: 0.85rem 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        body.light-mode .opt-item {
+            background: #f8fafc;
+            border-color: #e2edf7;
+        }
+        .opt-item:hover {
+            background: #1e293b;
+            border-color: #3b82f6;
+        }
+        body.light-mode .opt-item:hover {
+            background: #f1f6fe;
+        }
+        .opt-radio {
+            accent-color: #3b82f6;
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+        .opt-label {
+            color: #e2e8f0;
+            font-weight: 500;
+            flex: 1;
+        }
+        body.light-mode .opt-label {
+            color: #1f3b4c;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        .btn-nav {
+            background: #2d3a5e;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #e2e8f0;
+            transition: 0.2s;
+        }
+        body.light-mode .btn-nav {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        .btn-nav-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-nav-primary:hover {
+            background: #2563eb;
+        }
+        .warning {
+            color: #f97316;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
 
-    /* tiny breathing dot — pure geometry, zero brand */
-    .breathing-dot {
-      margin-top: 2.2rem;
-      width: 2px;
-      height: 2px;
-      background: rgba(210, 220, 250, 0.4);
-      border-radius: 50%;
-      box-shadow: 0 0 20px 6px rgba(160, 180, 240, 0.3);
-      animation: breathe 4.4s infinite ease-in-out;
-    }
+        /* Google Form Modal */
+        .googleform-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        .googleform-card {
+            background: #1e293b;
+            max-width: 450px;
+            width: 100%;
+            border-radius: 2rem;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 25px 40px -12px black;
+        }
+        body.light-mode .googleform-card {
+            background: #ffffff;
+            border-color: #cbd5e1;
+        }
+        .googleform-card h3 {
+            color: #facc15;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        body.light-mode .googleform-card h3 {
+            color: #1e4a76;
+        }
+        .googleform-card p {
+            color: #cbd5e6;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+        }
+        body.light-mode .googleform-card p {
+            color: #475569;
+        }
+        .googleform-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+        .googleform-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #cbd5e6;
+        }
+        body.light-mode .googleform-group label {
+            color: #334155;
+        }
+        .googleform-input {
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        body.light-mode .googleform-input {
+            background: #f1f5f9;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+        .googleform-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .googleform-submit {
+            background: #3b82f6;
+            border: none;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .googleform-submit:hover {
+            background: #2563eb;
+        }
+        .googleform-close {
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .hidden {
+            display: none;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-    /* optional minimal rhythm — like a slow pulse */
-    @keyframes breathe {
-      0% { opacity: 0.2; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.8); box-shadow: 0 0 30px 12px rgba(180, 200, 255, 0.4); }
-      100% { opacity: 0.2; transform: scale(1); }
-    }
+        .results-area {
+            padding: 2rem 1.5rem;
+        }
+        .insight-badge {
+            background: #2d3a5e;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            font-size: 0.7rem;
+            margin-bottom: 1rem;
+            color: #b9e0ff;
+        }
+        body.light-mode .insight-badge {
+            background: #eef2ff;
+            color: #1e4a76;
+        }
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #facc15;
+        }
+        body.light-mode .result-title {
+            color: #0f3b5e;
+        }
+        #insightText {
+            margin: 0.8rem 0;
+            line-height: 1.5;
+            color: #cbd5e6;
+        }
+        body.light-mode #insightText {
+            color: #2d3a5e;
+        }
+        .suggestion-card {
+            background: #0f172a;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+            border-left: 5px solid #3b82f6;
+        }
+        body.light-mode .suggestion-card {
+            background: #f1f5f9;
+            border-left-color: #2563eb;
+        }
+        .suggestion-card, .suggestion-card * {
+            color: #e2e8f0;
+        }
+        body.light-mode .suggestion-card,
+        body.light-mode .suggestion-card * {
+            color: #1e293b;
+        }
+        .suggestion-card strong, .suggestion-card b {
+            color: #facc15;
+        }
+        body.light-mode .suggestion-card strong,
+        body.light-mode .suggestion-card b {
+            color: #1e4a76;
+        }
+        .restart-btn {
+            background: #3b82f6;
+            width: 100%;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .restart-btn:hover {
+            background: #2563eb;
+        }
 
-    @keyframes appear {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ensure text stays readable on all screens */
-    @media (max-width: 600px) {
-      .sub {
-        letter-spacing: 0.1rem;
-      }
-      .breathing-dot {
-        margin-top: 1.5rem;
-      }
-      /* blobs become slightly smaller on narrow screens */
-      .blob-1 { width: 90vmax; height: 90vmax; }
-      .blob-2 { width: 70vmin; height: 70vmin; }
-    }
-
-    /* no footer, no copyright, no logo — just the promise */
-  </style>
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 1rem;
+            color: #5b6e8c;
+            border-top: 1px solid #334155;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        body.light-mode footer {
+            border-top-color: #e9edf2;
+        }
+        .footer-left {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .legal-link {
+            color: #5b6e8c;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.7rem;
+        }
+        .legal-link:hover {
+            color: #38bdf8;
+            text-decoration: underline;
+        }
+        body.light-mode .legal-link:hover {
+            color: #2563eb;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1.2rem;
+        }
+        .footer-social a {
+            color: #5b6e8c;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .footer-social a:hover {
+            color: #38bdf8;
+        }
+        .legal-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1.5rem;
+        }
+        .legal-modal {
+            background: #1e293b;
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #3b82f6;
+        }
+        body.light-mode .legal-modal {
+            background: #ffffff;
+        }
+        .legal-modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #facc15;
+        }
+        body.light-mode .legal-modal-header {
+            border-bottom-color: #e2e8f0;
+            color: #1e4a76;
+        }
+        .legal-modal-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #cbd5e6;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        body.light-mode .legal-modal-content {
+            color: #334155;
+        }
+        .legal-modal-content h3 {
+            margin: 1rem 0 0.5rem;
+            color: #facc15;
+        }
+        body.light-mode .legal-modal-content h3 {
+            color: #1e4a76;
+        }
+        .close-legal-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .legal-close-btn {
+            background: #3b82f6;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .brand-title { font-size: 1.5rem; }
+            .landing-title { font-size: 1.6rem; }
+            .question-text { font-size: 1.2rem; }
+        }
+    </style>
 </head>
-<body>
-  <!-- background shapes: open-source in spirit, just css & motion -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+<body class="dark-mode">
+<div class="container">
+    <div class="linkcard">
+        <div class="brand-area">
+            <div>
+                <div class="brand-title">LinkRaat</div>
+                <div class="tagline-sm">for real friends & mental health</div>
+            </div>
+            <div class="theme-switch-wrapper">
+                <i class="fas fa-moon theme-icon"></i>
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeSliderCheckbox">
+                    <span class="slider"></span>
+                </label>
+                <i class="fas fa-sun theme-icon"></i>
+            </div>
+        </div>
 
-  <!-- main text — exactly what you asked: two phrases, nothing else -->
-  <div class="message">
-    <h1>We are launching soon</h1>
-    <div class="sub">something great is coming</div>
-    <!-- not a button, not a form — just a quiet, living pixel -->
-    <div class="breathing-dot" aria-hidden="true"></div>
-    <!-- the dot is pure abstract animation, no logo, no brand -->
-  </div>
+        <div id="landingView">
+            <div class="landing-block">
+                <div class="hero-badge"><i class="fas fa-heart"></i> real connections · zero pressure</div>
+                <h1 class="landing-title">Find real friends.<br>Address mental health.</h1>
+                <p class="landing-desc">LinkRaat is a safe space to discuss loneliness, meet verified psychologists, and build authentic friendships — no swiping, no performance pressure.</p>
+                <button id="startSurveyBtn" class="btn-start-survey"><i class="fas fa-clipboard-list"></i> Take the friendship & well‑being check</button>
+                <div class="social-icons">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
 
-  <!-- absolutely no forms, no subscribe, no email, no trademarks -->
+        <div id="surveyView" class="hidden">
+            <div class="survey-container">
+                <div class="progress-area">
+                    <div class="progress-text"><span><i class="fas fa-users"></i> your connection profile</span><span id="qCount">1 / 12</span></div>
+                    <div class="progress-bar-bg"><div class="progress-fill" id="surveyProgressFill"></div></div>
+                </div>
+                <div id="dynamicQuestion"></div>
+                <div class="nav-buttons">
+                    <button id="prevSurveyBtn" class="btn-nav"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button id="nextSurveyBtn" class="btn-nav btn-nav-primary">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+                <div id="surveyWarning" class="warning"></div>
+            </div>
+        </div>
+
+        <div id="resultsView" class="hidden">
+            <div class="results-area">
+                <div class="insight-badge"><i class="fas fa-chart-line"></i> your personal snapshot</div>
+                <div class="result-title" id="resultMainTitle"></div>
+                <div id="insightText"></div>
+                <div id="suggestionBox" class="suggestion-card"></div>
+                <button id="restartFromResults" class="restart-btn"><i class="fas fa-redo-alt"></i> Take survey again</button>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-left">
+                <span>© LinkRaat</span>
+                <a class="legal-link" id="privacyLinkBtn">Privacy Policy</a>
+                <a class="legal-link" id="termsLinkBtn">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    const SURVEY_QUESTIONS = [
+        { text: "How often do you feel lonely even when you're around other people?", options: ["Never", "Rarely", "Sometimes", "Often", "Almost always"] },
+        { text: "When was the last time you made a new real friend (not just an acquaintance)?", options: ["Last week", "1-3 months ago", "4-12 months ago", "Over a year ago", "I can't remember"] },
+        { text: "Do you have someone you can openly share emotional struggles with?", options: ["Yes, multiple", "Yes, one close person", "Maybe not fully comfortable", "Not really", "No one at all"] },
+        { text: "How often do your friendships feel one-sided (you give more effort)?", options: ["Never", "Rarely", "Sometimes", "Often", "Very often"] },
+        { text: "In the past two weeks, how often have you felt down, depressed, or hopeless?", options: ["Not at all", "Several days", "More than half the days", "Nearly every day", "Extremely intense"] },
+        { text: "Do you feel social media increases your sense of isolation?", options: ["Not at all", "Slightly", "Moderately", "Very much", "Completely isolates me"] },
+        { text: "How comfortable are you reaching out to a psychologist?", options: ["Very comfortable", "Somewhat comfortable", "Neutral", "Uncomfortable", "Very uncomfortable"] },
+        { text: "When you feel lonely, what's your typical reaction?", options: ["Reach out to someone", "Keep busy alone", "Scroll social media", "Overthink/isolate more", "Feel physically drained"] },
+        { text: "How often do you engage in deep, meaningful conversations (not small talk)?", options: ["Daily", "Few times a week", "Weekly", "Rarely", "Almost never"] },
+        { text: "Do you feel a lack of genuine friendships affects your daily happiness?", options: ["Not at all", "Slightly", "Moderately", "Significantly", "Completely"] },
+        { text: "Would you like to be part of a small 'real friends circle' with shared hobbies?", options: ["Yes, absolutely", "Probably yes", "Maybe", "Not sure", "No"] },
+        { text: "Which real-life issue would you most want to discuss first on LinkRaat?", options: ["Making new friends as adult", "Chronic loneliness", "Social anxiety & pressure", "Low self-esteem", "Toxic friendships", "Grief or trauma"] }
+    ];
+
+    let userResponses = new Array(SURVEY_QUESTIONS.length).fill(null);
+    let currentQ = 0;
+
+    const landingDiv = document.getElementById('landingView');
+    const surveyDiv = document.getElementById('surveyView');
+    const resultsDiv = document.getElementById('resultsView');
+    const startBtn = document.getElementById('startSurveyBtn');
+    const nextBtn = document.getElementById('nextSurveyBtn');
+    const prevBtn = document.getElementById('prevSurveyBtn');
+    const restartBtn = document.getElementById('restartFromResults');
+    const dynamicQDiv = document.getElementById('dynamicQuestion');
+    const qCountSpan = document.getElementById('qCount');
+    const surveyProgressFill = document.getElementById('surveyProgressFill');
+    const surveyWarningSpan = document.getElementById('surveyWarning');
+
+    const themeCheckbox = document.getElementById('themeSliderCheckbox');
+    const bodyEl = document.body;
+    if (bodyEl.classList.contains('light-mode')) themeCheckbox.checked = true;
+    else themeCheckbox.checked = false;
+    themeCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) { bodyEl.classList.remove('dark-mode'); bodyEl.classList.add('light-mode'); } 
+        else { bodyEl.classList.remove('light-mode'); bodyEl.classList.add('dark-mode'); }
+    });
+
+    function updateProgress() {
+        const answered = userResponses.filter(a => a !== null).length;
+        const percent = (answered / SURVEY_QUESTIONS.length) * 100;
+        surveyProgressFill.style.width = `${percent}%`;
+        qCountSpan.innerText = `${currentQ+1} / ${SURVEY_QUESTIONS.length}`;
+    }
+
+    function renderQuestion() {
+        const q = SURVEY_QUESTIONS[currentQ];
+        const selectedVal = userResponses[currentQ];
+        let html = `<div class="question-card"><div class="question-text">${q.text}</div><div class="options-list">`;
+        q.options.forEach((opt, idx) => {
+            const checkedAttr = (selectedVal !== null && selectedVal === idx) ? 'checked' : '';
+            html += `<div class="opt-item" data-val="${idx}"><input type="radio" name="surveyOpt" id="opt_${idx}" value="${idx}" ${checkedAttr} class="opt-radio"><label for="opt_${idx}" class="opt-label">${opt}</label></div>`;
+        });
+        html += `</div></div>`;
+        dynamicQDiv.innerHTML = html;
+        document.querySelectorAll('.opt-item').forEach(item => {
+            const radio = item.querySelector('input[type="radio"]');
+            item.addEventListener('click', () => { if(radio) radio.checked = true; radio.dispatchEvent(new Event('change')); });
+            if(radio) radio.addEventListener('change', () => { if(radio.checked) { userResponses[currentQ] = parseInt(radio.value); surveyWarningSpan.innerText = ''; updateProgress(); } });
+        });
+        updateProgress();
+        nextBtn.innerHTML = (currentQ === SURVEY_QUESTIONS.length-1) ? 'See my insights <i class="fas fa-heart"></i>' : 'Next <i class="fas fa-arrow-right"></i>';
+    }
+
+    function hasAnswer() { 
+        if(userResponses[currentQ] === null) { surveyWarningSpan.innerText = 'Please select an answer 💙'; return false; }
+        surveyWarningSpan.innerText = ''; return true;
+    }
+
+    // Working Google Form submission
+    let submittedMain = false;
+    
+    function submitToGoogleFormWorking(name, email, callback) {
+        const iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe_survey';
+        iframe.id = 'hidden_iframe_survey';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        const tempForm = document.createElement('form');
+        tempForm.className = 'newsletter-form';
+        tempForm.method = 'POST';
+        tempForm.action = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfrV-Z0-KtNcS6xMrQ5IJIovbQ1o7tk70lDFqzjf5xP-pfFCw/formResponse';
+        tempForm.target = 'hidden_iframe_survey';
+        tempForm.style.display = 'none';
+        
+        const nameField = document.createElement('input');
+        nameField.type = 'text';
+        nameField.name = 'entry.1027791343';
+        nameField.value = name;
+        tempForm.appendChild(nameField);
+        
+        const emailField = document.createElement('input');
+        emailField.type = 'email';
+        emailField.name = 'entry.408341530';
+        emailField.value = email;
+        tempForm.appendChild(emailField);
+        
+        document.body.appendChild(tempForm);
+        
+        submittedMain = true;
+        tempForm.submit();
+        
+        localStorage.setItem('linkraat_user_email', email);
+        localStorage.setItem('linkraat_user_name', name);
+        
+        setTimeout(() => {
+            if (tempForm && tempForm.remove) tempForm.remove();
+            if (iframe && iframe.remove) iframe.remove();
+        }, 2000);
+        
+        setTimeout(callback, 800);
+    }
+
+    function showGoogleFormModal(callbackAfterSuccess) {
+        const modal = document.createElement('div'); 
+        modal.className = 'googleform-overlay';
+        modal.innerHTML = `
+            <div class="googleform-card">
+                <i class="fas fa-envelope-open-text" style="font-size:2rem; color:#3b82f6;"></i>
+                <h3>Almost there!</h3>
+                <p>Enter your name and email to receive personalized insights & professional recommendations.</p>
+                <div>
+                    <div class="googleform-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="googleFormName" class="googleform-input" placeholder="Your name" required>
+                    </div>
+                    <div class="googleform-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="googleFormEmail" class="googleform-input" placeholder="you@example.com" required>
+                    </div>
+                    <button id="googleFormSubmitBtn" class="googleform-submit">Continue to Results →</button>
+                </div>
+                <button id="closeGoogleModal" class="googleform-close">Cancel</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        const nameInput = modal.querySelector('#googleFormName');
+        const emailInput = modal.querySelector('#googleFormEmail');
+        const submitBtn = modal.querySelector('#googleFormSubmitBtn');
+        const closeBtn = modal.querySelector('#closeGoogleModal');
+        
+        submitBtn.addEventListener('click', () => {
+            const nameVal = nameInput.value.trim();
+            const emailVal = emailInput.value.trim();
+            if(!nameVal || !emailVal || !emailVal.includes('@')) {
+                alert('Please fill both name and valid email.');
+                return;
+            }
+            
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting...';
+            submitBtn.disabled = true;
+            
+            submitToGoogleFormWorking(nameVal, emailVal, () => {
+                modal.remove();
+                callbackAfterSuccess();
+            });
+        });
+        
+        closeBtn.addEventListener('click', () => { 
+            modal.remove();
+            surveyWarningSpan.innerText = 'Email & name required to see insights. Please retry.'; 
+        });
+    }
+
+    function computeResults() {
+        const lonelyScore = [1,2,3,4,5][userResponses[0]??2];
+        const friendFresh = [5,4,3,2,1][userResponses[1]??2];
+        const supportVal = [5,4,3,2,1][userResponses[2]??2];
+        const imbalance = [1,2,3,4,5][userResponses[3]??2];
+        const distress = [1,2,3,4,5][userResponses[4]??2];
+        const socialImpact = [1,2,3,4,5][userResponses[5]??2];
+        const avg = (lonelyScore + (6-friendFresh) + (6-supportVal) + imbalance + distress + socialImpact) / 6;
+        let category = "", insight = "";
+        if(avg <= 2.2) { category = "Connected & Resilient"; insight = "You have meaningful social foundations. Use LinkRaat to deepen friendships & mentor others."; }
+        else if(avg <= 3.5) { category = "Yearning for Deeper Bonds"; insight = "You're not alone — many crave real connections. Let's build small, authentic steps."; }
+        else { category = "Isolation & Emotional Weight"; insight = "Chronic loneliness affects health. You deserve support — therapy & peer circles can transform your life."; }
+        
+        const topicIdx = userResponses[11] ?? 0;
+        const topicMap = [
+            "Making new friends as adult → Join LinkRaat's 'Real Friends Circle' & hobby-based groups.",
+            "Chronic loneliness → Start with our 'Loneliness to Connection' 5-day journal & psychologist AMA.",
+            "Social anxiety & pressure → Try our social anxiety peer support group & CBT micro-exercises.",
+            "Low self-esteem → Affirmation circles & therapist-led self-compassion workshops.",
+            "Toxic friendships → Boundary-setting toolkit & group discussions with experts.",
+            "Grief or trauma → Private grief circles & trauma-informed psychologist recommendations."
+        ];
+        let suggestionHtml = `<strong><i class="fas fa-lightbulb"></i> Your recommended first step:</strong><br> ${topicMap[topicIdx]}<br><br>`;
+        const therapyReadiness = userResponses[6] !== null ? [5,4,3,2,1][userResponses[6]] : 3;
+        if(therapyReadiness >= 4) suggestionHtml += `<strong>🧠 You're open to therapy!</strong>`;
+        else if(therapyReadiness <= 2) suggestionHtml += `<strong>🌸 It's okay to feel hesitant.</strong> Start with anonymous community chats or 'Listen-first' groups.`;
+        else suggestionHtml += `<strong>💬 Consider a 'discovery call</strong> with a mental health professional — no commitment.`;
+        
+        document.getElementById('resultMainTitle').innerHTML = `${category} <i class="fas fa-heart" style="color:#f97316;"></i>`;
+        document.getElementById('insightText').innerHTML = `<strong>✨ ${insight}</strong><br><br>Your friendship & mental health score reflects a need for ${avg > 3 ? "deeper connection & support." : "community & authenticity."} LinkRaat is built exactly for this.`;
+        document.getElementById('suggestionBox').innerHTML = suggestionHtml;
+        surveyDiv.classList.add('hidden'); resultsDiv.classList.remove('hidden'); landingDiv.classList.add('hidden');
+    }
+
+    function goNext() {
+        if(!hasAnswer()) return;
+        if(currentQ === SURVEY_QUESTIONS.length-1) {
+            if(userResponses.every(r => r !== null)) showGoogleFormModal(() => computeResults());
+            else surveyWarningSpan.innerText = 'Please answer all questions.';
+        } else { currentQ++; renderQuestion(); }
+    }
+    function goPrev() { if(currentQ > 0) { currentQ--; renderQuestion(); surveyWarningSpan.innerText = ''; } }
+    function reset() { userResponses.fill(null); currentQ=0; landingDiv.classList.remove('hidden'); surveyDiv.classList.add('hidden'); resultsDiv.classList.add('hidden'); surveyWarningSpan.innerText=''; }
+    function start() { userResponses.fill(null); currentQ=0; landingDiv.classList.add('hidden'); surveyDiv.classList.remove('hidden'); resultsDiv.classList.add('hidden'); renderQuestion(); updateProgress(); }
+    
+    startBtn.addEventListener('click', start);
+    nextBtn.addEventListener('click', goNext);
+    prevBtn.addEventListener('click', goPrev);
+    restartBtn.addEventListener('click', reset);
+    reset();
+
+    function showLegalModal(title, contentHTML) {
+        const modalOverlay = document.createElement('div'); modalOverlay.className = 'legal-modal-overlay';
+        modalOverlay.innerHTML = `<div class="legal-modal"><div class="legal-modal-header"><span>${title}</span><button class="close-legal-modal">&times;</button></div><div class="legal-modal-content">${contentHTML}</div><div class="legal-modal-footer"><button class="legal-close-btn">Close</button></div></div>`;
+        document.body.appendChild(modalOverlay);
+        const closeBtn = modalOverlay.querySelector('.close-legal-modal');
+        const footerClose = modalOverlay.querySelector('.legal-close-btn');
+        const remove = () => modalOverlay.remove();
+        closeBtn.addEventListener('click', remove);
+        footerClose.addEventListener('click', remove);
+        modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) remove(); });
+    }
+    const privacyContent = `<h3>Privacy Policy</h3><p>We collect name and email to provide personalized mental health insights. Your data is never sold. You can request deletion anytime.</p><p>Google Forms handles submissions securely.</p><p><strong>Data Usage:</strong> Information is used solely for improving LinkRaat and matching you with relevant resources.</p>`;
+    const termsContent = `<h3>Terms of Service</h3><p>By using LinkRaat you agree to respectful behavior. Not for emergencies (dial emergency services if in crisis).</p><p><strong>Community Guidelines:</strong> No harassment, no dating solicitation, respect privacy.</p>`;
+    document.getElementById('privacyLinkBtn').addEventListener('click', () => showLegalModal('Privacy Policy', privacyContent));
+    document.getElementById('termsLinkBtn').addEventListener('click', () => showLegalModal('Terms of Service', termsContent));
+</script>
+
+ <script src="min.js"></script>
+
 </body>
 </html>
